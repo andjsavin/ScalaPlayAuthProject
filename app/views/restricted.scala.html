@@ -1,0 +1,51 @@
+
+@(carForm: Form[models.carForm], user: models.User, cars: Seq[models.car],
+        nameForm: Form[models.nameForm], surnameForm: Form[models.surnameForm], pwForm: Form[models.pwForm])
+
+@main("Welcome to Play! Login Sample - Restricted Area") {
+
+    <h1>Play! Login Sample - Restricted Area</h1>
+
+    <p>You are logged in as @user.name / @user.username</p>
+    <form id="user-data-form" role="form" action='@routes.Restricted.addCar()' method="post" class="form-horizontal" align="center" autocomplete="off">
+        <input type="text" id="brand" name="brand" value="" placeholder="brand" class="form-control input-lg" required><br/>
+        <input type="text" id="color" name="color" value="" placeholder="color" class="form-control input-lg" required><br/>
+        <input type="text" id="type" name ="type" value="" placeholder="type" class="form-control input-lg" required><br/>
+            <div class="form-actions controls ynt-btn-xlarge">
+                <button type="submit" class="btn btn-primary ynt-btn-orange">Add</button>
+            </div>
+    </form>
+    <form action="@routes.Restricted.changeName(user.userID)" method="post">
+        @user.name: <input type="text" id="newName" name="newName" value="" placeholder="newName" class="form-control input-lg">
+            <button type="submit" class="btn btn-primary ynt-btn-orange">Change</button>
+    </form>
+    <form action="@routes.Restricted.changeSurname(user.userID)" method="post">
+        @user.surname: <input type="text" id="newSurname" name="newSurname" value="" placeholder="newSurname" class="form-control input-lg">
+            <button type="submit" class="btn btn-primary ynt-btn-orange">Change</button>
+    </form>
+    <form action="@routes.Restricted.changePW(user.userID)" method="post">
+        @user.password: <input type="text" id="newPW" name="newPW" value="" placeholder="newPW" class="form-control input-lg"><button type="submit" class="btn btn-primary ynt-btn-orange">Change</button>
+    </form>
+    <fieldset>
+        <legend align="center"><h3>Cars</h3></legend>
+        <table cellspacing="20">
+            <tr>
+                <th>brand</th>
+                <th>color</th>
+                <th>type</th>
+            </tr>
+            @for(car <- cars){
+                <tr>
+                    <td>@car.brand</td>
+                    <td>@car.color</td>
+                    <td>@car.t</td>
+                    <td><a href="@routes.Restricted.deleteCar(car.id)">delete</a></td>
+                </tr>
+            }
+        </table>
+    </fieldset>
+
+    <ul>
+        <li><a href="@routes.Authentication.logout">Logout</a></li>
+    </ul>
+}

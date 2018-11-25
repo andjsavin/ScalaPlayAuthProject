@@ -1,0 +1,19 @@
+#User
+GET     /                           controllers.Authentication.index()
+GET     /adminRegister              controllers.userController.adminRegister()
+POST    /add                        controllers.userController.addUser()
+GET     /delete/:id                 controllers.userController.deleteUser(id: Int)
+GET     /userRegister               controllers.indexController.userRegister()
+POST    /reg                        controllers.indexController.addUser()
+# Authentication
+GET     /login                      controllers.Authentication.index()
+POST    /login                      controllers.Authentication.auth()
+GET     /logout                     controllers.Authentication.logout()
+
+GET     /restricted                 controllers.Restricted.index()
+POST    /addCar                     controllers.Restricted.addCar()
+GET     /deleteCar/:id              controllers.Restricted.deleteCar(id: Int)
+POST    /changeName/:id             controllers.Restricted.changeName(id: Int)
+POST    /changeSurname/:id          controllers.Restricted.changeSurname(id: Int)
+POST    /changePW/:id               controllers.Restricted.changePW(id: Int)
+GET     /public/*file               @controllers.Assets.at(path="/public", file)
