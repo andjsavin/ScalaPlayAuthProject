@@ -27,16 +27,16 @@ class userController @Inject()
   )
 
   def adminRegister = Action.async { implicit  request =>
-    if (request.session.get("username").isEmpty) {
+    if (request.session.get("username").isEmpty || userService.getUser(request.session.get("username").get).isEmpty) {
       userService.listAllUsers map { users =>
-        Ok(views.html.forbidden())
+        Ok(views.html.forbidden("Access only for admins"))
       }
     } else {
       val user = userService.getUser(request.session.get("username").get).get
       val id = userService.getId(request.session.get("username").get)
       if (user.isAdmin != 1) {
         userService.listAllUsers map { users =>
-          Ok(views.html.forbidden())
+          Ok(views.html.forbidden("Access only for admins"))
         }
       } else {
       userService.listAllUsers map { users =>
@@ -63,7 +63,7 @@ class userController @Inject()
         }
         if (unique == 1) {
           userService.listAllUsers map { users =>
-            Ok(views.html.forbidden())
+            Ok(views.html.forbidden("User already exists"))
           }
         } else {
           userService.addUser(newUser).map(res =>
@@ -75,8 +75,22 @@ class userController @Inject()
 
   def deleteUser(id : Int) = Action.async { implicit request =>
     Await.result(carService.deleteUserCars(id), Duration.Inf)
-    userService.deleteUser(id) map { res =>
-      Redirect(routes.userController.adminRegister())
+    if (request.session.get("username").isEmpty || userService.getUser(request.session.get("username").get).isEmpty) {
+      userService.listAllUsers map { users =>
+        Ok(views.html.forbidden("Access only for admins"))
+      }
+    } else {
+      val user = userService.getUser(request.session.get("username").get).get
+      val id = userService.getId(request.session.get("username").get)
+      if (user.isAdmin != 1) {
+        userService.listAllUsers map { users =>
+          Ok(views.html.forbidden("Access only for admins"))
+        }
+      } else {
+        userService.deleteUser(id) map { res =>
+          Redirect(routes.userController.adminRegister())
+        }
+      }
     }
   }
 

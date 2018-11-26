@@ -38,7 +38,7 @@ class indexController @Inject()
         }
         if (unique == 1) {
           userService.listAllUsers map { users =>
-            Ok(views.html.forbidden())
+            Ok(views.html.forbidden("User already exists"))
           }
         } else {
           userService.addUser(newUser).map(res =>
